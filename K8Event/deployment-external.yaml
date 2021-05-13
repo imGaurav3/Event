@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+
+kind: Deployment
+
+metadata:
+  name: external-deployment
+  labels:
+    app: external
+    tier: frontend
+
+spec:
+  template:
+    metadata:
+      name: external-pod
+      labels:
+        app: external
+
+    spec:
+      containers:
+        - name: external-container
+          image: imgaurav3/external:1.0
+          env:
+            - name: SERVER
+              valueFrom:
+                secretKeyRef:
+                  name: url-secret
+                  key: serverUrl
+
+  replicas: 3
+  selector:
+    matchLabels:
+      app: external
+
